@@ -1,0 +1,77 @@
+#!/bin/bash
+
+function initial {
+	# 读取变量名称
+	name=$1
+	dst="$srcDir/${namespace}/Command/${name}"
+	utDst="$utDir/${namespace}/Command/${name}"	
+
+	mkdir -p $dst
+	mkdir -p $utDst
+}
+
+function createAddCommandFile {
+
+	local dst="$dst/Add${name}Command.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/Command/AddCommand.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtAddCommandFile {
+
+	local dst="$utDst/Add${name}CommandTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/tests/ut/Command/AddCommand.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createEditCommandFile {
+
+	local dst="$dst/Edit${name}Command.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/Command/ModifyCommand.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		sed -i -e "s/{@operateCaps}/Edit/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtEditCommandFile {
+
+	local dst="$utDst/Edit${name}CommandTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/tests/ut/Command/ModifyCommand.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		sed -i -e "s/{@operateCaps}/Edit/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function generate {
+
+	createAddCommandFile
+	createUtAddCommandFile
+
+	createEditCommandFile
+	createUtEditCommandFile
+}
+
+initial $1
+generate

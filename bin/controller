@@ -1,0 +1,120 @@
+#!/bin/bash
+
+function initial {
+	# 读取变量名称
+	name=$1
+	dst="$srcDir/${namespace}/Controller"
+	utDst="$utDir/${namespace}/Controller"	
+	mockDst="$mockDir/${namespace}/Controller"
+
+	mkdir -p $dst
+	mkdir -p $utDst
+	mkdir -p $mockDst
+}
+
+function createFetchControllerFile {
+	local dst="$dst/${name}FetchController.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/Controller/FetchController.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtFetchControllerFile {
+	local dst="$utDst/${name}FetchControllerTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/ut/Controller/FetchController.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createMockFetchControllerFile {
+	local dst="$mockDst/Mock${name}FetchController.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/mock/Controller/FetchController.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createOperateControllerFile {
+	local dst="$dst/${name}OperateController.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/Controller/OperateController.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtOperateControllerFile {
+	local dst="$utDst/${name}OperateControllerTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/ut/Controller/OperateController.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst	
+		runSuccess "$dst"
+	fi
+}
+
+function createControllerTraitFile {
+	local dst="$dst/${name}ControllerTrait.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/Controller/ControllerTrait.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtControllerTraitFile {
+	local dst="$utDst/${name}ControllerTraitTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/ut/Controller/ControllerTrait.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createMockControllerTraitFile {
+	local dst="$mockDst/Mock${name}ControllerTrait.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/mock/Controller/ControllerTrait.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function generate {
+	createFetchControllerFile
+	createUtFetchControllerFile
+	createMockFetchControllerFile
+
+	createOperateControllerFile
+	createUtOperateControllerFile
+
+	createControllerTraitFile
+	createUtControllerTraitFile
+	createMockControllerTraitFile
+}
+
+initial $1
+generate

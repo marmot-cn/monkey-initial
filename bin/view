@@ -1,0 +1,41 @@
+#!/bin/bash
+
+function initial {
+	# 读取变量名称
+	name=$1
+	dst="$srcDir/${namespace}/View"
+
+	mkdir -p $dst
+}
+
+function createViewFile {
+	local dst="$dst/${name}View.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/View/View.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createSchemaFile {
+	local dst="$dst/${name}Schema.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/View/Schema.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function generate {
+	createViewFile
+	createSchemaFile
+}
+
+initial $1
+generate

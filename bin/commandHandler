@@ -1,0 +1,135 @@
+#!/bin/bash
+
+function initial {
+	# 读取变量名称
+	name=$1
+	dst="$srcDir/${namespace}/CommandHandler/${name}"
+	utDst="$utDir/${namespace}/CommandHandler/${name}"	
+	mockDst="$mockDir/${namespace}/CommandHandler/${name}"	
+
+	# 创建模型路径
+	mkdir -p $dst
+	mkdir -p $utDst
+	mkdir -p $mockDst
+}
+
+function createAddCommandHandlerFile {
+
+	local dst="$dst/Add${name}CommandHandler.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/CommandHandler/AddCommandHandler.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtAddCommandHandlerFile {
+
+	local dst="$utDst/Add${name}CommandHandlerTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/tests/ut/CommandHandler/AddCommandHandler.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createMockAddCommandHandlerFile {
+	local dst="$mockDst/MockAdd${name}CommandHandler.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/mock/CommandHandler/AddCommandHandler.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createEditCommandHandlerFile {
+
+	local dst="$dst/Edit${name}CommandHandler.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/CommandHandler/ModifyCommandHandler.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		sed -i -e "s/{@operateCaps}/Edit/g" -e "s/{@operate}/edit/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtEditCommandHandlerFile {
+
+	local dst="$utDst/Edit${name}CommandHandlerTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/tests/ut/CommandHandler/ModifyCommandHandler.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		sed -i -e "s/{@operateCaps}/Edit/g" -e "s/{@operate}/edit/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createMockEditCommandHandlerFile {
+	local dst="$mockDst/MockEdit${name}CommandHandler.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/mock/CommandHandler/ModifyCommandHandler.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		sed -i -e "s/{@operateCaps}/Edit/g" -e "s/{@operate}/edit/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createCommandHandlerFactoryFile {
+
+	local dst="$dst/${name}CommandHandlerFactory.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/CommandHandler/CommandHandlerFactory.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtCommandHandlerFactoryFile {
+
+	local dst="$utDst/${name}CommandHandlerFactoryTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/tests/ut/CommandHandler/CommandHandlerFactory.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+
+function generate {
+
+	createAddCommandHandlerFile
+	createUtAddCommandHandlerFile
+	createMockAddCommandHandlerFile
+
+	createEditCommandHandlerFile
+	createUtEditCommandHandlerFile
+	createMockEditCommandHandlerFile
+
+	createCommandHandlerFactoryFile
+	createUtCommandHandlerFactoryFile
+}
+
+initial $1
+generate

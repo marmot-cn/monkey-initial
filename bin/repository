@@ -1,0 +1,56 @@
+#!/bin/bash
+
+function initial {
+	# 读取变量名称
+	name=$1
+	dst="$srcDir/${namespace}/Repository"
+	utDst="$utDir/${namespace}/Repository"
+	mockDst="$mockDir/${namespace}/Repository"
+
+	mkdir -p $dst
+	mkdir -p $utDst
+	mkdir -p $mockDst
+}
+
+function createRepositoryFile {
+	local dst="$dst/${name}Repository.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/Repository/Repository.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtRepositoryFile {
+	local dst="$utDst/${name}RepositoryTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/ut/Repository/Repository.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createMockRepositoryFile {
+	local dst="$mockDst/Mock${name}Repository.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/mock/Repository/Repository.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function generate {
+	createRepositoryFile
+	createUtRepositoryFile
+	createMockRepositoryFile
+}
+
+initial $1
+generate

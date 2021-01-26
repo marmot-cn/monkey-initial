@@ -1,0 +1,45 @@
+#!/bin/bash
+
+function initial {
+	# 读取变量名称
+	name=$1
+	nameUnderScore=`echo "${name,}" | sed 's/[A-Z]/_\l&/g'`
+	dst="$srcDir/${namespace}/Translator"
+	utDst="$utDir/${namespace}/Translator"	
+
+	mkdir -p $dst
+	mkdir -p $utDst
+}
+
+function createDbTranslatorFile {
+	local dst="$dst/${name}DbTranslator.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/Translator/DbTranslator.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		sed -i -e "s/{@nameUnderScore}/${nameUnderScore}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtDbTranslatorFile {
+	local dst="$utDst/${name}DbTranslatorTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/ut/Translator/DbTranslator.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		sed -i -e "s/{@nameUnderScore}/${nameUnderScore}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function generate {
+	createDbTranslatorFile
+	createUtDbTranslatorFile
+}
+
+initial $1
+generate

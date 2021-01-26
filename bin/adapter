@@ -1,0 +1,137 @@
+#!/bin/bash
+
+function initial {
+	# 读取变量名称
+	name=$1
+	nameUnderScore=`echo "${name,}" | sed 's/[A-Z]/_\l&/g'`
+	dst="$srcDir/${namespace}/Adapter/${name}"
+	utDst="$utDir/${namespace}/Adapter/${name}"
+	mockDst="$mockDir/${namespace}/Adapter/${name}"
+
+	mkdir -p "$dst/Query/Persistence/"
+	mkdir -p "$utDst/Query/Persistence/"
+	mkdir -p "$mockDst/Query/Persistence/"
+}
+
+function createCacheFile {
+	local dst="$dst/Query/Persistence/${name}Cache.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/src/Adapter/Query/Persistence/Cache.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtCacheFile {
+	local dst="$utDst/Query/Persistence/${name}CacheTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/tests/ut/Adapter/Query/Persistence/Cache.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createMockCacheFile {
+	local dst="$mockDst/Query/Persistence/Mock${name}Cache.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/tests/mock/Adapter/Query/Persistence/Cache.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createAdapterFile {
+	local dst="$dst/${name}Adapter.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/src/Adapter/Adapter.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtAdapterFile {
+	local dst="$utDst/${name}AdapterTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/tests/ut/Adapter/Adapter.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createMockAdapterFile {
+	local dst="$mockDst/Mock${name}Adapter.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/tests/mock/Adapter/Adapter.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+
+function createMockAdapterFile {
+	local dst="$dst/${name}MockAdapter.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/src/Adapter/DbMockAdapter.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtMockAdapterFile {
+	local dst="$utDst/${name}MockAdapterTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/tests/ut/Adapter/DbMockAdapter.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createIAdapterFile {
+	local dst="$dst/I${name}Adapter.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/src/Adapter/IAdapter.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function generate {
+	createCacheFile
+	createUtCacheFile
+	createMockCacheFile
+
+	createAdapterFile
+	createUtAdapterFile
+	createMockAdapterFile
+
+	createMockAdapterFile
+	createUtMockAdapterFile
+
+	createIAdapterFile
+}
+
+initial $1
+generate

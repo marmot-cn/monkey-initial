@@ -1,0 +1,23 @@
+{
+    "name": "marmot/monkey-initial",
+    "description": "monkey auto create tool",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "chloroplast",
+            "email": "dingkebin@qixinyun.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "bin": [
+        "monkey-initial"
+    ],
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        }
+    }
+}

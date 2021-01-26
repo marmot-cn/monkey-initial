@@ -1,0 +1,47 @@
+#!/bin/bash
+
+export baseDir="/var/www/html"
+export srcDir="$baseDir/src"
+export utDir="$baseDir/tests/ut/src"
+export mockDir="$baseDir/tests/mock"
+export vendorDir="/var/www/html/vendor/marmot/marmot-initial"
+
+source "$vendorDir/common/logfunc"
+export -f runSuccess
+export -f runFail
+
+source "$vendorDir/common/helpfunc"
+
+# 区分 后端服务层 和 前端服务层
+# cat "$baseDir/composer.json" | grep "monkey-framework"
+
+# echo $?
+
+# 参数
+# --overwrite 复写
+
+if [ "$1" = "" ];then
+	menu
+	exit
+fi
+
+export overwrite=0
+export namespace=$1
+
+for arg in $*; do
+	case $arg in
+	'--overwrite') 
+		export overwrite=1
+		;;
+	"--namespace="*)
+		eval $(echo $arg | awk -F "=" '{if(-n $2) print "export namespace="$2}')
+		;;
+	*)
+	esac
+done
+
+chmod +x $vendorDir/bin/*
+for script in `ls $vendorDir/bin/*`; 
+do
+	$script $1
+done

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+function runSuccess {
+  echo -e "$1 \t[  \033[0;32mok\033[0m  ]";
+}
+
+function runFail {
+  echo -e "$1 \t[  \033[0;31mfaile\033[0m  ]";
+  exit
+}

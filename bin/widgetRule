@@ -1,0 +1,42 @@
+#!/bin/bash
+
+function initial {
+	# 读取变量名称
+	name=$1
+	dst="$srcDir/${namespace}/WidgetRule"
+	utDst="$utDir/${namespace}/WidgetRule"	
+
+	mkdir -p $dst
+	mkdir -p $utDst
+}
+
+function createWidgetRuleFile {
+	local dst="$dst/${name}WidgetRule.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		# 创建模型文件
+		cp $vendorDir/template/src/WidgetRule/WidgetRule.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function createUtWidgetRuleFile {
+	local dst="$utDst/${name}WidgetRuleTest.php"
+	if [ -f $dst -a $overwrite = 0 ];then
+		runFail "$dst"
+	else
+		cp $vendorDir/template/tests/ut/WidgetRule/WidgetRule.php $dst
+		sed -i -e "s/{@nameCaps}/${name}/g" -e "s/{@name}/${name,}/g" -e "s/{@namespaceCaps}/${namespace}/g" $dst
+		runSuccess "$dst"
+	fi
+}
+
+function generate {
+	createWidgetRuleFile
+	createUtWidgetRuleFile
+}
+
+initial $1
+generate
